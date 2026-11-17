@@ -13,7 +13,7 @@ gym.register_envs(ale_py)
 
 # Change these values for a shorter training run or to skip watching afterward.
 TOTAL_TIMESTEPS = 10_000  # Smoke test; use the approved budget for experiments.
-CHECKPOINT_FREQUENCY = 25_000
+CHECKPOINT_FREQUENCY = 5_000
 
 # A new folder for each run protects previously saved models.
 SAVE_DIR = Path(__file__).resolve().parent / "models" / datetime.now().strftime("run_%Y%m%d_%H%M%S_%f")
@@ -27,7 +27,21 @@ print("Creating training environment...", flush=True)
 # Use frameskip=1, render_mode=None, frame_skip=4, terminal_on_life_loss=False.
 # Pass seed=SEED to make_atari_env for reproducible setup.
 SEED = 42
-env = None
+
+env = make_atari_env(
+    "ALE/BattleZone-v5",
+    n_envs=1,
+    seed=SEED,
+    env_kwargs={
+        "frameskip": 1,
+        "render_mode": None
+    },
+    wrapper_kwargs={
+        "frame_skip": 4,
+        "terminal_on_life_loss": False
+    }
+)
+
 if env is None:
     raise NotImplementedError("Complete the environment setup before training.")
 
@@ -49,7 +63,7 @@ try:
         verbose=1,
         seed=SEED,
     )
-    agent.save(str(SAVE_DIR / "breakout_initial"))
+    agent.save(str(SAVE_DIR / "battlezone_initial"))
     print("Initial model saved!", flush=True)
 
     # ==============================
@@ -57,7 +71,7 @@ try:
     checkpoint = CheckpointCallback(
         save_freq=CHECKPOINT_FREQUENCY,
         save_path=str(SAVE_DIR),
-        name_prefix="breakout",
+        name_prefix="battlezone",
         verbose=2,
     )
     print("Starting training...", flush=True)
@@ -69,8 +83,8 @@ try:
 
     # ==============================
     # STEP 4: SAVE THE TRAINED AGENT
-    agent.save(str(SAVE_DIR / "breakout_final"))
-    print(f"Training complete! Final model saved to: {SAVE_DIR / 'breakout_final.zip'}", flush=True)
+    agent.save(str(SAVE_DIR / "battlezone_final"))
+    print(f"Training complete! Final model saved to: {SAVE_DIR / 'battlezone_final.zip'}", flush=True)
 finally:
     env.close()
 
