@@ -8,7 +8,7 @@ from stable_baselines3.common.vec_env import VecFrameStack
 gym.register_envs(ale_py)
 
 # Copy your final saved model here and name the copy my_model.zip.
-MODEL_PATH = Path(__file__).resolve().parent / "models/run_20261117_133754_300483/battlezone_initial.zip"
+MODEL_PATH = Path(__file__).resolve().parent / "models/run_20261119_122106_235524/battlezone_400000_steps.zip"
 WATCH_STEPS = 2000
 
 agent = DQN.load(MODEL_PATH, device="cpu")

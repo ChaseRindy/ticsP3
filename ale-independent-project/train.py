@@ -12,8 +12,8 @@ from stable_baselines3.common.vec_env import VecFrameStack
 gym.register_envs(ale_py)
 
 # Change these values for a shorter training run or to skip watching afterward.
-TOTAL_TIMESTEPS = 10_000  # Smoke test; use the approved budget for experiments.
-CHECKPOINT_FREQUENCY = 5_000
+TOTAL_TIMESTEPS = 500_000  # Smoke test; use the approved budget for experiments.
+CHECKPOINT_FREQUENCY = 100_000
 
 # A new folder for each run protects previously saved models.
 SAVE_DIR = Path(__file__).resolve().parent / "models" / datetime.now().strftime("run_%Y%m%d_%H%M%S_%f")
@@ -56,10 +56,12 @@ try:
         "CnnPolicy",
         env,
         learning_rate=0.0001,
-        buffer_size=20_000,
-        learning_starts=1000,
-        batch_size=32,
+        buffer_size=50_000,
+        learning_starts=5000,
+        batch_size=64,
         gamma=0.99,
+        exploration_fraction=0.2,
+        exploration_final_eps=0.02,
         verbose=1,
         seed=SEED,
     )
